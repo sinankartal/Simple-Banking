@@ -73,6 +73,8 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped(typeof(IAccountRepository), typeof(AccountRepository));
 builder.Services.AddScoped(typeof(IAccountHolderRepository), typeof(AccountHolderRepository));
 builder.Services.AddScoped(typeof(IIBANStoreRepository), typeof(IBANStoreRepository));
+builder.Services.AddScoped(typeof(ITransactionFeeRepository), typeof(TransactionFeeRepository));
+builder.Services.AddScoped(typeof(ITransactionHistoryRepository), typeof(TransactionHistoryRepository));
 
 //SQLite db
 builder.Services.AddDbContext<ApplicationDbContext>();
@@ -83,9 +85,8 @@ builder.Services.AddControllers()
 
 
 //AutoMapper
-var config = new MapperConfiguration(cfg => { cfg.AddProfile(new AutoMapperProfile()); });
-var mapper = config.CreateMapper();
-builder.Services.AddSingleton(mapper);
+builder.Services
+    .AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
 var app = builder.Build();
 
