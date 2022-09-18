@@ -1,10 +1,6 @@
 namespace Common.RequestMessages;
 
-public class AccountTopUpRequest
-{
-    public string AccountHolderId { get; set; }
-
-    public string AccountNumber { get; set; }
-    
+public class AccountTopUpRequest: AccountActivitiesRequest
+{ 
     public decimal Amount { get; set; }
 }

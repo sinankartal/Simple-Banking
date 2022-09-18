@@ -3,7 +3,6 @@ using AutoMapper;
 using Common.DTOs;
 using Common.Enums;
 using Common.Helpers;
-using Common.Helpers.ReferenceNumberHelper;
 using Common.RequestMessages;
 using Common.ResponseMessages;
 using Microsoft.Extensions.Logging;
@@ -17,8 +16,6 @@ public class AccountService : IAccountService
     private readonly IAccountRepository _accountRepository;
     private readonly IAccountHolderRepository _accountHolderRepository;
     private readonly IIBANStoreRepository _ibanStoreRepository;
-    private readonly ITransactionFeeRepository _transactionFeeRepository;
-    private readonly ITransactionHistoryRepository _transactionHistoryRepository;
     private readonly ILogger<AccountService> _logger;
     private readonly IMapper _mapper;
 
@@ -30,9 +27,7 @@ public class AccountService : IAccountService
         _accountHolderRepository = accountHolderRepository;
         _logger = logger;
         _ibanStoreRepository = ibanStoreRepository;
-        _transactionHistoryRepository = transactionHistoryRepository;
         _mapper = mapper;
-        _transactionFeeRepository = transactionFeeRepository;
     }
 
     public async Task<AccountCreateResponse> CreateAsync(AccountCreateRequest accountCreateRequest)
@@ -100,50 +95,6 @@ public class AccountService : IAccountService
 
         List<AccountDTO> accountDtos = new List<AccountDTO>();
         return _mapper.Map(accounts, accountDtos);
-    }
-
-    public async Task<AccountTopUpResponse> TopUp(AccountTopUpRequest accountTopUpRequest)
-    {
-        Account holderAccount =
-            _accountRepository.GetHolderAccount(accountTopUpRequest.AccountHolderId, accountTopUpRequest.AccountNumber);
-        if (holderAccount is null || string.IsNullOrEmpty(holderAccount.Id))
-        {
-            throw new AppException($"User does not have account for {accountTopUpRequest.AccountNumber} number");
-        }
-
-        TransactionFee transactionFee = _transactionFeeRepository.GetFeeByType(TransactionFeeType.ACCOUNT_TOPUP);
-        String referenceNumberTopUp = ReferenceNumberGenerator.Generate();
-        TransactionHistory topUpHistory = new TransactionHistory();
-        SetHistory(accountTopUpRequest.AccountHolderId, topUpHistory, referenceNumberTopUp,
-            TransactionType.TOPUP, accountTopUpRequest);
-
-        await _transactionHistoryRepository.InsertAsync(topUpHistory);
-
-        if (transactionFee is null || string.IsNullOrEmpty(transactionFee.Id))
-        {
-            holderAccount.Balance += accountTopUpRequest.Amount;
-        }
-        else
-        {
-            holderAccount.Balance += accountTopUpRequest.Amount -
-                                     (accountTopUpRequest.Amount *  transactionFee.Percentage / 100);
-
-            String referenceNumberFee = ReferenceNumberGenerator.Generate();
-            SetHistory(accountTopUpRequest.AccountHolderId, topUpHistory, referenceNumberFee, TransactionType.FEE,
-                transactionFee);
-            await _transactionHistoryRepository.InsertAsync(topUpHistory);
-        }
-
-        _accountRepository.Update(holderAccount);
-        _accountRepository.SaveAsync();
-        AccountTopUpResponse response = new AccountTopUpResponse()
-        {
-            AccountId = holderAccount.Id,
-            Message = "Top up is successful.",
-            ReferenceNumber = referenceNumberTopUp,
-        };
-
-        return response;
     }
 
     private static void SetHistory(string accountHolderId, TransactionHistory history,

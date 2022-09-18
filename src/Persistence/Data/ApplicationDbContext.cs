@@ -67,7 +67,7 @@ public class ApplicationDbContext : DbContext
         {
             Id = new Guid().ToString(),
             Percentage = 1,
-            Type = (int) TransactionFeeType.ACCOUNT_TOPUP,
+            Type = TransactionFeeType.ACCOUNT_TOPUP,
             CreateDate = DateTime.Now,
             ModifyDate = DateTime.Now
         });

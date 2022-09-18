@@ -11,6 +11,4 @@ public interface IAccountService
     Task<AccountDTO> GetAsync(string id);
 
     List<AccountDTO> GetAccountsByBsn(string bsn);
-
-    Task<AccountTopUpResponse> TopUp(AccountTopUpRequest accountTopUpRequest);
 }

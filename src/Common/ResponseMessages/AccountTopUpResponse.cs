@@ -1,8 +1,5 @@
 namespace Common.ResponseMessages;
 
-public class AccountTopUpResponse
+public class AccountTopUpResponse: AccountActivitiesResponse
 {
-    public string AccountId { get; set; }
-    public string Message { get; set; }
-    public string ReferenceNumber { get; set; }
 }

@@ -5,6 +5,8 @@ using Application.IServices;
 using Application.Services;
 using AutoMapper;
 using Common.CustomValidators;
+using Common.Enums;
+using Common.Helpers;
 using Common.RequestMessages;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -68,6 +70,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddTransient<Func<AccountActivityType, IAccountActivitiesService>>(serviceProvider => key =>
+{
+    switch (key)
+    {
+        case AccountActivityType.TOPUP:
+            return serviceProvider.GetService<AccountTopUpService>() ?? throw new InvalidOperationException();
+        default:
+            throw new AppException("No service found!");
+    }
+});
+
+builder.Services.AddScoped<AccountTopUpService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped(typeof(IAccountRepository), typeof(AccountRepository));

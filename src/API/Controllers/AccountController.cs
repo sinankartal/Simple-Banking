@@ -44,14 +44,6 @@ public class AccountController : ControllerBase
         return Ok(accountDtos);
     }
     
-    [SwaggerOperation(Summary = "Account Top up")]
-    [HttpPost("/topup")]
-    public async Task<ActionResult<AccountTopUpResponse>> TopUp(AccountTopUpRequest request)
-    {
-        AccountTopUpResponse topUpResponse = await _accountService.TopUp(request);
-        return Ok(topUpResponse);
-    }
-    
     // [SwaggerOperation(Summary = "Get the progress of provided job by jobId")]
     // [Authorize]
     // [Route("number:length(10)")]
