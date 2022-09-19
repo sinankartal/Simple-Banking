@@ -3,14 +3,11 @@ using API.Middlewares;
 using Application;
 using Application.IServices;
 using Application.Services;
-using AutoMapper;
 using Common.CustomValidators;
 using Common.Enums;
 using Common.Helpers;
-using Common.RequestMessages;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Persistence.Data;
@@ -70,25 +67,30 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddTransient<Func<AccountActivityType, IAccountActivitiesService>>(serviceProvider => key =>
+builder.Services.AddTransient<Func<AccountActivityType, IFinancialServices>>(serviceProvider => key =>
 {
     switch (key)
     {
         case AccountActivityType.TOPUP:
             return serviceProvider.GetService<AccountTopUpService>() ?? throw new InvalidOperationException();
+        case AccountActivityType.MONEY_TRANSFER:
+            return serviceProvider.GetService<MoneyTransferService>() ?? throw new InvalidOperationException();
         default:
             throw new AppException("No service found!");
     }
 });
 
 builder.Services.AddScoped<AccountTopUpService>();
+builder.Services.AddScoped<MoneyTransferService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+
 builder.Services.AddScoped(typeof(IAccountRepository), typeof(AccountRepository));
 builder.Services.AddScoped(typeof(IAccountHolderRepository), typeof(AccountHolderRepository));
 builder.Services.AddScoped(typeof(IIBANStoreRepository), typeof(IBANStoreRepository));
 builder.Services.AddScoped(typeof(ITransactionFeeRepository), typeof(TransactionFeeRepository));
 builder.Services.AddScoped(typeof(ITransactionHistoryRepository), typeof(TransactionHistoryRepository));
+builder.Services.AddScoped(typeof(ITransactionLimitRepository), typeof(TransactionLimitRepository));
 
 //SQLite db
 builder.Services.AddDbContext<ApplicationDbContext>();
@@ -96,7 +98,10 @@ builder.Services.AddDbContext<ApplicationDbContext>();
 //custom validator
 builder.Services.AddControllers()
     .AddFluentValidation(c => c.RegisterValidatorsFromAssemblyContaining<AccountCreateValidator>());
-
+builder.Services.AddControllers()
+    .AddFluentValidation(c => c.RegisterValidatorsFromAssemblyContaining<MoneyTransferValidator>());
+builder.Services.AddControllers()
+    .AddFluentValidation(c => c.RegisterValidatorsFromAssemblyContaining<AccountTopupValidator>());
 
 //AutoMapper
 builder.Services

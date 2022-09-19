@@ -1,7 +1,6 @@
 using Application.IServices;
 using AutoMapper;
 using Common.DTOs;
-using Common.Enums;
 using Common.Helpers;
 using Common.RequestMessages;
 using Common.ResponseMessages;
@@ -20,8 +19,7 @@ public class AccountService : IAccountService
     private readonly IMapper _mapper;
 
     public AccountService(IAccountRepository accountRepository, ILogger<AccountService> logger,
-        IAccountHolderRepository accountHolderRepository, IIBANStoreRepository ibanStoreRepository, IMapper mapper,
-        ITransactionFeeRepository transactionFeeRepository, ITransactionHistoryRepository transactionHistoryRepository)
+        IAccountHolderRepository accountHolderRepository, IIBANStoreRepository ibanStoreRepository, IMapper mapper)
     {
         _accountRepository = accountRepository;
         _accountHolderRepository = accountHolderRepository;
@@ -32,6 +30,8 @@ public class AccountService : IAccountService
 
     public async Task<AccountCreateResponse> CreateAsync(AccountCreateRequest accountCreateRequest)
     {
+        _logger.LogInformation("AccountCreateService new account create started.");
+        
         IBANStore ibanObj = await _ibanStoreRepository.GetNonActiveIban();
 
         if (ibanObj is null || ibanObj.Id == 0)
@@ -59,6 +59,8 @@ public class AccountService : IAccountService
             AccountId = account.Id,
             Message = "The account is created successfully."
         };
+        _logger.LogInformation("AccountCreateService new account create ended.");
+
         return response;
     }
 
@@ -85,9 +87,9 @@ public class AccountService : IAccountService
         return _mapper.Map<Account, AccountDTO>(account);
     }
 
-    public List<AccountDTO> GetAccountsByBsn(string bsn)
+    public async Task<List<AccountDTO>> GetAccountsByBsnAsync(string bsn)
     {
-        List<Account> accounts = _accountRepository.GetAccountsByBsn(bsn);
+        List<Account> accounts = await _accountRepository.GetAccountsByBsnAsync(bsn);
         if (!accounts.Any())
         {
             throw new KeyNotFoundException($"Accounts cannot be found for {bsn}");
@@ -95,14 +97,5 @@ public class AccountService : IAccountService
 
         List<AccountDTO> accountDtos = new List<AccountDTO>();
         return _mapper.Map(accounts, accountDtos);
-    }
-
-    private static void SetHistory(string accountHolderId, TransactionHistory history,
-        string referenceNumberTopUp, TransactionType type, object data)
-    {
-        history.Type = type;
-        history.ReferenceNumber = referenceNumberTopUp;
-        history.AccountHolderId = accountHolderId;
-        history.Data = Newtonsoft.Json.JsonConvert.SerializeObject(data);
     }
 }

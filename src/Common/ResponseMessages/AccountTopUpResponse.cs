@@ -1,5 +1,5 @@
 namespace Common.ResponseMessages;
 
-public class AccountTopUpResponse: AccountActivitiesResponse
+public class AccountTopUpResponse: FinancialBaseResponse
 {
 }

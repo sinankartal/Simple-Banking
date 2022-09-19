@@ -5,7 +5,9 @@ namespace Persistence.IRepositories;
 
 public interface IAccountRepository: IRepository<Account>
 {
-    Account GetHolderAccount(string accountHolderId, string accountNumber);
+    Task<Account?> GetHolderAccountAsync(string accountHolderId, string accountNumber);
 
-    List<Account> GetAccountsByBsn(string bsn);
+    Task<List<Account>> GetAccountsByBsnAsync(string bsn);
+
+    Task<Account> FindByIBANAsync(string iban);
 }

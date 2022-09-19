@@ -38,9 +38,9 @@ public class AccountController : ControllerBase
     
     [SwaggerOperation(Summary = "Get accounts by BSN")]
     [HttpGet("{bsn:length(8)}")]
-    public ActionResult<List<AccountDTO>> GetAccountsByBsn(string bsn)
+    public async Task<ActionResult<List<AccountDTO>>> GetAccountsByBsn(string bsn)
     {
-        List<AccountDTO> accountDtos =  _accountService.GetAccountsByBsn(bsn);
+        List<AccountDTO> accountDtos =  await _accountService.GetAccountsByBsnAsync(bsn);
         return Ok(accountDtos);
     }
     

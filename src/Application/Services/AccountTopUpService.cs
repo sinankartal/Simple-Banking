@@ -1,7 +1,4 @@
-using Application.IServices;
-using AutoMapper;
 using Common.Enums;
-using Common.Helpers.ReferenceNumberHelper;
 using Common.RequestMessages;
 using Common.ResponseMessages;
 using Microsoft.Extensions.Logging;
@@ -10,24 +7,29 @@ using Persistence.Models;
 
 namespace Application.Services;
 
-public class AccountTopUpService : BaseAccountActivites
+public class AccountTopUpService : FinancialServicesBase
 {
     private readonly ITransactionFeeRepository _transactionFeeRepository;
     private readonly IAccountRepository _accountRepository;
+    private readonly ILogger _logger;
 
     public AccountTopUpService(IAccountRepository accountRepository, ILogger<AccountService> logger,
-        ITransactionHistoryRepository transactionHistoryRepository, ITransactionFeeRepository transactionFeeRepository)
-        : base(accountRepository, logger, transactionHistoryRepository)
+        ITransactionHistoryRepository transactionHistoryRepository, ITransactionFeeRepository transactionFeeRepository,
+        ITransactionLimitRepository transactionLimitRepository)
+        : base(accountRepository, logger, transactionHistoryRepository, transactionLimitRepository)
     {
         _header.Type = TransactionType.TOPUP;
         _transactionFeeRepository = transactionFeeRepository;
         _accountRepository = accountRepository;
+        _logger = logger;
     }
 
 
-    public override async Task DoExecute(AccountActivitiesRequest request,
-        AccountActivitiesResponse response)
+    public override async Task DoExecute(FinancialBaseRequest request,
+        FinancialBaseResponse response)
     {
+        _logger.LogInformation($"AccountTopUpService DoExecute started");
+        
         AccountTopUpRequest accountTopUpRequest = request as AccountTopUpRequest;
         AccountTopUpResponse accountTopUpResponse = response as AccountTopUpResponse;
         TransactionFee transactionFee = _transactionFeeRepository.GetFeeByType(TransactionFeeType.ACCOUNT_TOPUP);
@@ -46,5 +48,6 @@ public class AccountTopUpService : BaseAccountActivites
         _accountRepository.SaveAsync();
 
         accountTopUpResponse.Message = "Top up is successful.";
+        _logger.LogInformation($"AccountTopUpService DoExecute ended");
     }
 }

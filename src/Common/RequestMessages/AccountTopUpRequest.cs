@@ -1,6 +1,5 @@
 namespace Common.RequestMessages;
 
-public class AccountTopUpRequest: AccountActivitiesRequest
+public class AccountTopUpRequest: FinancialBaseRequest
 { 
-    public decimal Amount { get; set; }
 }

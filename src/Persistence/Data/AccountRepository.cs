@@ -13,19 +13,24 @@ public class AccountRepository : Repository<Account>, IAccountRepository
         _context = context;
     }
 
-    public Account GetHolderAccount(string accountHolderId, string accountNumber)
+    public Task<Account?> GetHolderAccountAsync(string accountHolderId, string accountNumber)
     {
         return _context.Accounts.Where(a => a.AccountNumber.Equals(accountNumber) && a.HolderId.Equals(accountHolderId))
-            .FirstOrDefault();
+            .FirstOrDefaultAsync();
     }
     
     public override async Task<Account> FindAsync(string id)
     {
-        return await _context.Accounts.Include(a => a.Holder).FirstOrDefaultAsync();
+        return await _context.Accounts.Include(a => a.Holder).FirstOrDefaultAsync(s=>s.Id.Equals(id));
     }
 
-    public List<Account> GetAccountsByBsn(string bsn)
+    public async Task<List<Account>> GetAccountsByBsnAsync(string bsn)
     {
-        return _context.Accounts.Where(res => res.Holder.BSN.Equals(bsn)).Include(s=>s.Holder).ToList();
+        return await _context.Accounts.Where(res => res.Holder.BSN.Equals(bsn)).Include(s=>s.Holder).ToListAsync();
+    }
+    
+    public async Task<Account> FindByIBANAsync(string iban)
+    {
+        return await _context.Accounts.Where(res => res.IBAN.Equals(iban)).Include(s=>s.Holder).FirstOrDefaultAsync();
     }
 }

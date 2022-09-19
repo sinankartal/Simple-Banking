@@ -1,6 +1,6 @@
 namespace Common.ResponseMessages;
 
-public class AccountActivitiesResponse
+public class FinancialBaseResponse
 {
     public string AccountId { get; set; }
     public string Message { get; set; }

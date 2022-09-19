@@ -10,5 +10,5 @@ public interface IAccountService
     
     Task<AccountDTO> GetAsync(string id);
 
-    List<AccountDTO> GetAccountsByBsn(string bsn);
+    Task<List<AccountDTO>> GetAccountsByBsnAsync(string bsn);
 }

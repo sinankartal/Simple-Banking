@@ -10,4 +10,6 @@ public class TransactionHeader
     public TransactionType Type { get; set; }
     
     public TransactionFee Fee { get; set; }
+    
+    public TransactionLimitType LimitType { get; set; }
 }

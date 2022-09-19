@@ -9,7 +9,7 @@ namespace Common
         private static Assembly _assembly;
         private static readonly object LockObject = new object();
 
-        public static AccountActivitiesResponse GetResponseInstance(AccountActivitiesRequest requestParameter)
+        public static FinancialBaseResponse GetResponseInstance(FinancialBaseRequest requestParameter)
         {
             if (_assembly == null)
             {
@@ -31,7 +31,7 @@ namespace Common
                 responseTypeName += "Response";
 
 
-            return _assembly.CreateInstance(responseTypeName) as AccountActivitiesResponse;
+            return _assembly.CreateInstance(responseTypeName) as FinancialBaseResponse;
         }
     }
 }

@@ -57,15 +57,15 @@ public class ApplicationDbContext : DbContext
             .HasColumnType("datetime2");
 
         var transactionFees = modelBuilder.Entity<TransactionFee>();
-        transactionFees.Property(x=>x.Id).IsRequired().HasColumnType("varchar");
-        transactionFees.Property(x=>x.Type).HasColumnType("int");
-        transactionFees.Property(x=>x.Percentage).HasColumnType("decimal");
-        transactionFees.Property(x=>x.CreateDate).HasColumnType("datetime2");
-        transactionFees.Property(x=>x.ModifyDate).HasColumnType("datetime2");
+        transactionFees.Property(x => x.Id).IsRequired().HasColumnType("varchar");
+        transactionFees.Property(x => x.Type).HasColumnType("int");
+        transactionFees.Property(x => x.Percentage).HasColumnType("decimal");
+        transactionFees.Property(x => x.CreateDate).HasColumnType("datetime2");
+        transactionFees.Property(x => x.ModifyDate).HasColumnType("datetime2");
 
         transactionFees.HasData(new TransactionFee
         {
-            Id = new Guid().ToString(),
+            Id = "902d0151-483d-4ada-8320-5346afff69c1",
             Percentage = 1,
             Type = TransactionFeeType.ACCOUNT_TOPUP,
             CreateDate = DateTime.Now,
@@ -73,7 +73,7 @@ public class ApplicationDbContext : DbContext
         });
 
         var ibanInfos = modelBuilder.Entity<IBANStore>();
-        transactionFees.Property(x=>x.Id).IsRequired().HasColumnType("int");
+        transactionFees.Property(x => x.Id).IsRequired().HasColumnType("int");
 
         ibanInfos.Property(u => u.IBAN)
             .HasColumnType("varchar")
@@ -88,7 +88,7 @@ public class ApplicationDbContext : DbContext
         ibanInfos.Property(u => u.IsActive)
             .HasColumnType("byte");
 
-        modelBuilder.Entity<IBANStore>()
+        ibanInfos
             .HasData(
                 new IBANStore
                 {
@@ -203,13 +203,41 @@ public class ApplicationDbContext : DbContext
                     IsActive = false
                 }
             );
+
+        var transactionLimits = modelBuilder.Entity<TransactionLimit>();
+        transactionLimits.Property(x => x.Id).IsRequired().HasColumnType("int");
+        transactionLimits.Property(x => x.Type).IsRequired().HasColumnType("int");
+        transactionLimits.Property(x => x.CreateDate).IsRequired().HasColumnType("datetime2");
+        transactionLimits.Property(x => x.ModifyDate).IsRequired().HasColumnType("datetime2");
+
+        transactionLimits.Property(u => u.MaxAmount)
+            .HasColumnType("decimal")
+            .HasConversion<decimal>()
+            .HasMaxLength(18);
+
+        transactionLimits.Property(u => u.MinAmount)
+            .HasColumnType("decimal")
+            .HasConversion<decimal>()
+            .HasMaxLength(18);
+
+        transactionLimits.HasData(
+            new TransactionLimit()
+            {
+                Id = "809b3b27-fd3b-4f5c-a2e4-5ab989744afb",
+                ModifyDate = DateTime.Now,
+                CreateDate = DateTime.Now,
+                MaxAmount = 100,
+                MinAmount = 1,
+            });
     }
 
     public DbSet<AccountHolder> AccountHolders { get; set; }
-    public DbSet<Account> Accounts { get; set; }
+    public DbSet<Account?> Accounts { get; set; }
     public DbSet<TransactionFee> TransactionFees { get; set; }
-    
+
     public DbSet<TransactionHistory> TransactionHistories { get; set; }
 
     public DbSet<IBANStore> IbanStores { get; set; }
+
+    public DbSet<TransactionLimit> TransactionLimits { get; set; }
 }
