@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Persistence.IRepositories;
 using Persistence.Models;
 
@@ -12,8 +13,8 @@ public class AccountHolderRepository: Repository<AccountHolder>, IAccountHolderR
         _context = context;
     }
 
-    public AccountHolder FindByBSNAsync(string bsn)
+    public async Task<AccountHolder> FindByBSNAsync(string bsn)
     {
-       return _context.AccountHolders.FirstOrDefault(a=>a.BSN.Equals(bsn));
+       return await _context.AccountHolders.FirstOrDefaultAsync(a=>a.BSN.Equals(bsn));
     }
 }

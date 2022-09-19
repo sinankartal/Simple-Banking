@@ -4,5 +4,5 @@ namespace Persistence.IRepositories;
 
 public interface IAccountHolderRepository : IRepository<AccountHolder>
 {
-    public AccountHolder FindByBSNAsync(string BSN);
+    public Task<AccountHolder> FindByBSNAsync(string BSN);
 }

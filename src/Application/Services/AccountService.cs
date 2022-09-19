@@ -39,8 +39,8 @@ public class AccountService : IAccountService
             throw new AppException("There is no active iban");
         }
 
-        var holder = _accountHolderRepository.FindByBSNAsync(accountCreateRequest.BSN);
-        if (holder is null)
+        var holder = await _accountHolderRepository.FindByBSNAsync(accountCreateRequest.BSN);
+        if (holder is null || string.IsNullOrEmpty(holder.Id))
         {
             holder = await CreateAccountHolder(accountCreateRequest);
         }
@@ -51,7 +51,7 @@ public class AccountService : IAccountService
         account.AccountNumber = ibanObj.AccountNumber;
         account.Holder = holder;
         account.IBAN = ibanObj.IBAN;
-        await _accountRepository.InsertAsync(account);
+        account.Id = await _accountRepository.InsertAsync(account);
         _ibanStoreRepository.UpdateActiveFlag(ibanObj.Id, true);
         _accountRepository.SaveAsync();
         AccountCreateResponse response = new AccountCreateResponse
@@ -83,7 +83,6 @@ public class AccountService : IAccountService
             throw new KeyNotFoundException("Account cannot be found");
         }
 
-        AccountDTO dto = new AccountDTO();
         return _mapper.Map<Account, AccountDTO>(account);
     }
 
@@ -94,8 +93,8 @@ public class AccountService : IAccountService
         {
             throw new KeyNotFoundException($"Accounts cannot be found for {bsn}");
         }
+        
+        return _mapper.Map<List<Account>, List<AccountDTO>>(accounts);
 
-        List<AccountDTO> accountDtos = new List<AccountDTO>();
-        return _mapper.Map(accounts, accountDtos);
     }
 }
