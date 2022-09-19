@@ -2,6 +2,7 @@ using Application.IServices;
 using Common.Enums;
 using Common.RequestMessages;
 using Common.ResponseMessages;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -20,6 +21,7 @@ public class FinancialOperationController : ControllerBase
 
     [SwaggerOperation(Summary = "Account Top up")]
     [HttpPost("/topup")]
+    [Authorize]
     public async Task<ActionResult<AccountTopUpResponse>> TopUp(AccountTopUpRequest request)
     {
         var service = _serviceResolver(AccountActivityType.TOPUP);
@@ -29,6 +31,7 @@ public class FinancialOperationController : ControllerBase
     
     [SwaggerOperation(Summary = "Money Transfer")]
     [HttpPost("/money-transfer")]
+    [Authorize]
     public async Task<ActionResult<AccountTopUpResponse>> TopUp(MoneyTransferRequest request)
     {
         var service = _serviceResolver(AccountActivityType.MONEY_TRANSFER);

@@ -1,0 +1,29 @@
+2022-09-20 00:07:55.465 +02:00 [INF] User profile is available. Using '/Users/sinankartal/.aspnet/DataProtection-Keys' as key repository; keys will not be encrypted at rest.
+2022-09-20 00:07:55.664 +02:00 [INF] Now listening on: https://localhost:7238
+2022-09-20 00:07:55.664 +02:00 [INF] Now listening on: http://localhost:5251
+2022-09-20 00:07:55.669 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2022-09-20 00:07:55.669 +02:00 [INF] Hosting environment: Development
+2022-09-20 00:07:55.669 +02:00 [INF] Content root path: /Users/sinankartal/RiderProjects/Simple-Banking/src/API/
+2022-09-20 00:07:56.016 +02:00 [INF] Request starting HTTP/1.1 GET https://localhost:7238/swagger/index.html - -
+2022-09-20 00:07:56.263 +02:00 [INF] Request finished HTTP/1.1 GET https://localhost:7238/swagger/index.html - - - 200 - text/html;charset=utf-8 256.1537ms
+2022-09-20 00:07:56.969 +02:00 [INF] Request starting HTTP/1.1 GET https://localhost:7238/swagger/v1/swagger.json - -
+2022-09-20 00:07:57.169 +02:00 [INF] Request finished HTTP/1.1 GET https://localhost:7238/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 200.0981ms
+2022-09-20 00:08:06.780 +02:00 [INF] Request starting HTTP/1.1 POST https://localhost:7238/api/Token/login?username=admin&password=admin - 0
+2022-09-20 00:08:06.861 +02:00 [INF] Executing endpoint 'API.Controllers.TokenController.Login (API)'
+2022-09-20 00:08:06.898 +02:00 [INF] Route matched with {action = "Login", controller = "Token"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult Login(System.String, System.String) on controller API.Controllers.TokenController (API).
+2022-09-20 00:08:07.134 +02:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType0`2[[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2022-09-20 00:08:07.148 +02:00 [INF] Executed action API.Controllers.TokenController.Login (API) in 239.7084ms
+2022-09-20 00:08:07.150 +02:00 [INF] Executed endpoint 'API.Controllers.TokenController.Login (API)'
+2022-09-20 00:08:07.150 +02:00 [INF] Request finished HTTP/1.1 POST https://localhost:7238/api/Token/login?username=admin&password=admin - 0 - 200 - application/json;+charset=utf-8 370.2963ms
+2022-09-20 00:08:51.236 +02:00 [INF] Request starting HTTP/1.1 POST https://localhost:7238/topup application/json 113
+2022-09-20 00:08:51.333 +02:00 [INF] Executing endpoint 'API.Controllers.FinancialOperationController.TopUp (API)'
+2022-09-20 00:08:51.346 +02:00 [INF] Route matched with {action = "TopUp", controller = "FinancialOperation"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Common.ResponseMessages.AccountTopUpResponse]] TopUp(Common.RequestMessages.AccountTopUpRequest) on controller API.Controllers.FinancialOperationController (API).
+2022-09-20 00:08:53.895 +02:00 [INF] AccountTopUpService DoExecute started
+2022-09-20 00:08:54.117 +02:00 [INF] AccountTopUpService DoExecute ended
+2022-09-20 00:08:54.117 +02:00 [INF] FinancialServies TOPUP DoExecute end
+2022-09-20 00:08:54.396 +02:00 [INF] FinancialServies end. RefNo: REFHhi3gJuk6iimErsbpY3A
+2022-09-20 00:08:54.405 +02:00 [INF] Executing OkObjectResult, writing value of type 'Common.ResponseMessages.AccountTopUpResponse'.
+2022-09-20 00:08:54.407 +02:00 [INF] Executed action API.Controllers.FinancialOperationController.TopUp (API) in 3061.212ms
+2022-09-20 00:08:54.408 +02:00 [INF] Executed endpoint 'API.Controllers.FinancialOperationController.TopUp (API)'
+2022-09-20 00:08:54.415 +02:00 [INF] Request finished HTTP/1.1 POST https://localhost:7238/topup application/json 113 - 200 - application/json;+charset=utf-8 3179.3709ms
+2022-09-20 00:10:15.524 +02:00 [INF] Application is shutting down...

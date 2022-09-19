@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Persistence.Data;
 using Persistence.IRepositories;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -79,6 +80,12 @@ builder.Services.AddTransient<Func<AccountActivityType, IFinancialServices>>(ser
             throw new AppException("No service found!");
     }
 });
+
+var logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.File("../logs/api-log..txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+builder.Logging.AddSerilog(logger);
 
 builder.Services.AddScoped<AccountTopUpService>();
 builder.Services.AddScoped<MoneyTransferService>();

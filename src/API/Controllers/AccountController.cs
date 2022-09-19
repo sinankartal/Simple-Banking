@@ -21,6 +21,7 @@ public class AccountController : ControllerBase
     
     [SwaggerOperation(Summary = "Create new account")]
     [HttpPost]
+    [Authorize]
     public async Task<ActionResult<AccountCreateResponse>> Create(AccountCreateRequest request)
     {
         AccountCreateResponse response = await _accountService.CreateAsync(request);
@@ -30,6 +31,7 @@ public class AccountController : ControllerBase
 
     [SwaggerOperation(Summary = "Get account by id")]
     [HttpGet("{id}")]
+    [Authorize]
     public async Task<ActionResult<AccountDTO>> Get(string id)
     {
         AccountDTO accountDto = await _accountService.GetAsync(id);
@@ -38,20 +40,10 @@ public class AccountController : ControllerBase
     
     [SwaggerOperation(Summary = "Get accounts by BSN")]
     [HttpGet("{bsn:length(8)}")]
+    [Authorize]
     public async Task<ActionResult<List<AccountDTO>>> GetAccountsByBsn(string bsn)
     {
         List<AccountDTO> accountDtos =  await _accountService.GetAccountsByBsnAsync(bsn);
         return Ok(accountDtos);
     }
-    
-    // [SwaggerOperation(Summary = "Get the progress of provided job by jobId")]
-    // [Authorize]
-    // [Route("number:length(10)")]
-    // [HttpGet("{id}")]
-    // public async Task<ActionResult<AccountDTO>> GetByAccountNumber(string number)
-    // {
-    //     AccountDTO accountDto = await _accountService.Get(number);
-    //     return Ok(accountDto);
-    // }
-
 }
