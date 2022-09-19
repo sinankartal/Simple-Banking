@@ -5,5 +5,5 @@ namespace Application.IServices;
 
 public interface IFinancialServices
 {
-    Task<FinancialBaseResponse> Execute(FinancialBaseRequest request); 
+    Task<FinancialBaseResponse> ExecuteAsync(FinancialBaseRequest request); 
 }

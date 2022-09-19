@@ -32,9 +32,9 @@ public abstract class FinancialServicesBase : IFinancialServices
         _logger = logger;
     }
 
-    public abstract Task DoExecute(FinancialBaseRequest request, FinancialBaseResponse response);
+    protected abstract Task DoExecuteAsync(FinancialBaseRequest request, FinancialBaseResponse response);
 
-    public async Task<FinancialBaseResponse> Execute(FinancialBaseRequest request)
+    public async Task<FinancialBaseResponse> ExecuteAsync(FinancialBaseRequest request)
     {
         var response = InstanceCreator.GetResponseInstance(request);
 
@@ -60,7 +60,7 @@ public abstract class FinancialServicesBase : IFinancialServices
             }
         }
 
-        await DoExecute(request, response);
+        await DoExecuteAsync(request, response);
         _logger.LogInformation($"FinancialServies {_header.Type.ToString()} DoExecute end");
 
         String referenceNumber = ReferenceNumberGenerator.Generate();

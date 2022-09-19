@@ -24,7 +24,7 @@ public class MoneyTransferService : FinancialServicesBase
         _logger = logger;
     }
 
-    public override async Task DoExecute(FinancialBaseRequest request, FinancialBaseResponse response)
+    protected override async Task DoExecuteAsync(FinancialBaseRequest request, FinancialBaseResponse response)
     {
         _logger.LogInformation("Money Transfer DoExecute started");
         MoneyTransferRequest moneyTransferRequest = request as MoneyTransferRequest;

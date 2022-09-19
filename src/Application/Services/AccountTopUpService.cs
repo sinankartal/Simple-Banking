@@ -25,7 +25,7 @@ public class AccountTopUpService : FinancialServicesBase
     }
 
 
-    public override async Task DoExecute(FinancialBaseRequest request,
+    protected override async Task DoExecuteAsync(FinancialBaseRequest request,
         FinancialBaseResponse response)
     {
         _logger.LogInformation($"AccountTopUpService DoExecute started");
@@ -45,7 +45,6 @@ public class AccountTopUpService : FinancialServicesBase
         }
 
         _accountRepository.Update(holderAccount);
-        _accountRepository.SaveAsync();
 
         accountTopUpResponse.Message = "Top up is successful.";
         _logger.LogInformation($"AccountTopUpService DoExecute ended");
