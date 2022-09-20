@@ -39,7 +39,7 @@ public class AccountController : ControllerBase
     }
     
     [SwaggerOperation(Summary = "Get accounts by BSN")]
-    [HttpGet("{bsn:length(8)}")]
+    [HttpGet("{bsn:length(9)}")]
     [Authorize]
     public async Task<ActionResult<List<AccountDTO>>> GetAccountsByBsn(string bsn)
     {
